@@ -7,11 +7,12 @@ import 'package:http/http.dart' as http;
 import 'package:incite/data/blog_list_holder.dart';
 import 'package:incite/elements/bottom_card_item.dart';
 import 'package:incite/elements/drawer_builder.dart';
-import 'package:incite/models/blog_category.dart';
 import 'package:incite/repository/user_repository.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
 import '../app_theme.dart';
+// import 'package:incite/models/blog_category.dart';
+import '../models/blog_model.dart';
 
 //* <----------- Search Blog Page -------------->
 
@@ -52,8 +53,7 @@ class _CategoryPostPageState extends State<CategoryPostPage> {
       body: msg,
     );
     Map data = json.decode(response.body);
-    final list =
-        (data['data'] as List).map((i) => new Blog.fromMap(i)).toList();
+    final list = IgBlog.fromJson(data).data.data.toList();
     setState(() {
       print(list);
       blogListHolder.clearList();

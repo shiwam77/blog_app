@@ -75,20 +75,22 @@ class UserController extends ControllerMVC {
             builder: (context) => SwipeablePage(0),
           ));
         } else {
-          // ScaffoldMessenger.of(context).showSnackBar(snackBar)
-          // scKey?.currentState?.showSnackBar(SnackBar(
-          //   content: Text(repository.allMessages.value.wrongEmailAndPassword),
-          // ));
+          ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
+            content: Text(repository.allMessages.value.wrongEmailAndPassword),
+          ));
         }
       }).catchError((e) {
-        // scKey?.currentState?.showSnackBar(SnackBar(
-        //   content: Text(repository.allMessages.value.emailNotExist),
-        // ));
+        print(e);
+
+        ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
+          content: Text(repository.allMessages.value.emailNotExist),
+        ));
       }).whenComplete(() {
         BotToast.closeAllLoading();
       });
     } catch (e) {
-      BotToast.showCustomText(toastBuilder: e);
+      print(e);
+      BotToast.showCustomText(toastBuilder: (_) => Text(e.toString()));
     }
   }
 
@@ -113,15 +115,9 @@ class UserController extends ControllerMVC {
             ));
           } else {
             print("else error");
-            // scKey?.currentState?.showSnackBar(SnackBar(
-            //   content: Text(repository.allMessages.value.wrongEmailAndPassword),
-            // ));
           }
         }).catchError((e) {
           print("catch error");
-          // scKey?.currentState?.showSnackBar(SnackBar(
-          //   content: Text(repository.allMessages.value.emailNotExist),
-          // ));
         }).whenComplete(() {
           BotToast.closeAllLoading();
         });
@@ -137,14 +133,14 @@ class UserController extends ControllerMVC {
           // Navigator.of(scKey.currentContext)
           //     .pushReplacementNamed('/MainPage', arguments: false);
         } else {
-          // scKey?.currentState?.showSnackBar(SnackBar(
-          //   content: Text(repository.allMessages.value.wrongEmailAndPassword),
-          // ));
+          ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
+            content: Text(repository.allMessages.value.wrongEmailAndPassword),
+          ));
         }
       }).catchError((e) {
-        // scKey?.currentState?.showSnackBar(SnackBar(
-        //   content: Text(repository.allMessages.value.emailNotExist),
-        // ));
+        ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
+          content: Text(repository.allMessages.value.emailNotExist),
+        ));
       }).whenComplete(() {
         BotToast.closeAllLoading();
       });
@@ -165,14 +161,14 @@ class UserController extends ControllerMVC {
             builder: (context) => SwipeablePage(0),
           ));
         } else {
-          // scKey?.currentState?.showSnackBar(SnackBar(
-          //   content: Text(repository.allMessages.value.wrongEmailAndPassword),
-          // ));
+          ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
+            content: Text(repository.allMessages.value.wrongEmailAndPassword),
+          ));
         }
       }).catchError((e) {
-        // scKey?.currentState?.showSnackBar(SnackBar(
-        //   content: Text(repository.allMessages.value.emailNotExist),
-        // ));
+        ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
+          content: Text(repository.allMessages.value.emailNotExist),
+        ));
       }).whenComplete(() {
         BotToast.closeAllLoading();
       });
@@ -307,14 +303,15 @@ class UserController extends ControllerMVC {
           setState(() {
             _isLoading = false;
           });
-          // scaffoldKey.currentState.showSnackBar(SnackBar(
-          //   content: Text(repository.allMessages.value.profileUpdated),
-          // ));
+          ScaffoldMessenger.of(scaffoldKey.currentContext)
+              .showSnackBar(SnackBar(
+            content: Text(repository.allMessages.value.profileUpdated),
+          ));
         }
       }).catchError((e) {
-        // scaffoldKey?.currentState?.showSnackBar(SnackBar(
-        //   content: Text(repository.allMessages.value.emailNotExist),
-        // ));
+        ScaffoldMessenger.of(scaffoldKey.currentContext).showSnackBar(SnackBar(
+          content: Text(repository.allMessages.value.emailNotExist),
+        ));
       }).whenComplete(() {});
     }
   }
@@ -325,14 +322,15 @@ class UserController extends ControllerMVC {
         setState(() {
           _isLoading = false;
         });
-        // scaffoldKey.currentState.showSnackBar(SnackBar(
-        //   content: Text(repository.allMessages.value.profileUpdated),
-        // ));
+
+        ScaffoldMessenger.of(scaffoldKey.currentContext).showSnackBar(SnackBar(
+          content: Text(repository.allMessages.value.profileUpdated),
+        ));
       }
     }).catchError((e) {
-      // scaffoldKey?.currentState?.showSnackBar(SnackBar(
-      //   content: Text(repository.allMessages.value.emailNotExist),
-      // ));
+      ScaffoldMessenger.of(scaffoldKey.currentContext).showSnackBar(SnackBar(
+        content: Text(repository.allMessages.value.emailNotExist),
+      ));
     }).whenComplete(() {});
   }
 
@@ -343,9 +341,9 @@ class UserController extends ControllerMVC {
         print("repository ${repository.allMessages.value.skip}");
       }
     }).catchError((e) {
-      // scaffoldKey?.currentState?.showSnackBar(SnackBar(
-      //   content: Text(repository.allMessages.value.noLanguageFound),
-      // ));
+      ScaffoldMessenger.of(scaffoldKey.currentContext).showSnackBar(SnackBar(
+        content: Text(repository.allMessages.value.noLanguageFound),
+      ));
     }).whenComplete(() {});
   }
 
@@ -355,9 +353,9 @@ class UserController extends ControllerMVC {
         repository.allLanguages = value;
       }
     }).catchError((e) {
-      // scaffoldKey?.currentState?.showSnackBar(SnackBar(
-      //   content: Text(repository.allMessages.value.noLanguageFound),
-      // ));
+      ScaffoldMessenger.of(scaffoldKey.currentContext).showSnackBar(SnackBar(
+        content: Text(repository.allMessages.value.noLanguageFound),
+      ));
     }).whenComplete(() {});
   }
 

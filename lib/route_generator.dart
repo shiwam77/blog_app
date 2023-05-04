@@ -5,7 +5,7 @@ import 'package:incite/pages/ads.dart';
 import 'package:incite/pages/auth.dart';
 import 'package:incite/pages/category_post.dart';
 import 'package:incite/pages/home_page.dart';
-import 'package:incite/pages/home_page_clone.dart';
+import 'package:incite/pages/home_page_clone_1.dart';
 import 'package:incite/pages/latest_post.dart';
 import 'package:incite/pages/load_swipeable.dart';
 import 'package:incite/pages/read_blog.dart';
@@ -13,7 +13,7 @@ import 'package:incite/pages/saved_post.dart';
 import 'package:incite/pages/search_page.dart';
 import 'package:incite/pages/user_profile.dart';
 
-import 'models/blog_category.dart';
+import 'models/blog_model.dart';
 import 'pages/language_selection.dart';
 import 'pages/splash_screen.dart';
 

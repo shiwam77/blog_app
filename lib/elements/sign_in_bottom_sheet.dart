@@ -36,6 +36,8 @@ class _SignInBottomSheetState extends StateMVC<SignInBottomSheet> {
 
     return SingleChildScrollView(
       child: Container(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.only(

@@ -2,11 +2,12 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:incite/data/blog_list_holder.dart';
-import 'package:incite/models/blog_category.dart';
 import 'package:incite/pages/SwipeablePage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+// import 'package:incite/models/blog_category.dart';
+import '../models/blog_model.dart';
 
 class CardItem extends StatefulWidget {
   final int index;
@@ -210,7 +211,7 @@ class _CardItemState extends State<CardItem>
                 width: 12.0,
                 height: 12.0,
                 decoration: new BoxDecoration(
-                  color: HexColor(widget.item.categoryColor),
+                  // color: HexColor(widget.item.color),
                   //color: Colors.orange,
                   shape: BoxShape.circle,
                 ),

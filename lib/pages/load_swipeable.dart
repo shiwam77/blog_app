@@ -8,12 +8,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:incite/controllers/user_controller.dart';
 import 'package:incite/data/blog_list_holder.dart';
-import 'package:incite/models/blog_category.dart';
 import 'package:incite/models/setting.dart';
 import 'package:incite/models/user.dart';
 import 'package:incite/pages/SwipeablePage.dart';
 import 'package:incite/repository/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/blog_model.dart';
 
 SharedPreferences prefs;
 //* <--------- Authentication page [Login, SignUp , ForgotPassword] ------------>
@@ -60,8 +61,8 @@ class _LoadSwipePageState extends State<LoadSwipePage> {
       },
     );
     Map data = json.decode(result.body);
-    final list =
-        (data['data'] as List).map((i) => new Blog.fromMap(i)).toList();
+    final list = IgBlog.fromJson(data).data.data.toList();
+
     print(list);
     if (this.mounted) {
       setState(() {

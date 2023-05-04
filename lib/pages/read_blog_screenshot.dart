@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' show parse;
-import 'package:incite/models/blog_category.dart';
+
+import '../models/blog_model.dart';
 
 class ReadBlogScreenshot extends StatefulWidget {
   final Blog item;

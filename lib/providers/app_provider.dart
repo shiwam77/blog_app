@@ -5,12 +5,14 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:incite/data/blog_list_holder.dart';
-import 'package:incite/models/blog_category.dart';
+// import 'package:incite/models/blog_category.dart';
 import 'package:incite/repository/user_repository.dart';
+
+import '../models/blog_model.dart';
 
 class AppProvider with ChangeNotifier {
   bool _load = false;
-  BlogCategory _blog;
+  IgBlog _blog;
   var _blogList;
 
   AppProvider() {
@@ -19,7 +21,7 @@ class AppProvider with ChangeNotifier {
     getBlogData();
   }
 
-  BlogCategory get blog => _blog;
+  IgBlog get blog => _blog;
 
   get blogList => _blogList ?? [];
 
@@ -40,15 +42,15 @@ class AppProvider with ChangeNotifier {
       setLoading(load: true);
       var url = "https://incite.technofox.co.in/api/blog-category-list";
       var result = await http.get(
-        Uri(path: url),
+        Uri.parse(url),
         headers: {
           "Content-Type": "application/json",
           'userData': currentUser.value.id,
           "lang-code": languageCode.value?.language ?? null
         },
       );
-      Map data = json.decode(result.body);
-      _blog = BlogCategory.fromMap(data);
+      final data = json.decode(result.body);
+      _blog = IgBlog.fromJson(data);
       setLoading(load: false);
     } catch (e) {
       setLoading(load: false);
@@ -72,8 +74,10 @@ class AppProvider with ChangeNotifier {
     setLoading(load: false);
     Map data = json.decode(result.body);
     print('data is $data');
-    final list =
-        (data['data'] as List).map((i) => new Blog.fromMap(i)).toList();
+    final list = IgBlog.fromJson(data).data.data.toList();
+    // print("shiwam = $listd");
+    // final list =
+    //     (data['data'] as List).map((i) => new Blog.fromMap(i)).toList();
     _blogList = list;
     blogListHolder.clearList();
     blogListHolder.setList(list);

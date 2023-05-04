@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
-import 'package:incite/models/blog_category.dart';
 import 'package:incite/repository/user_repository.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../app_theme.dart';
+import '../models/blog_model.dart';
 
 //* <------- Bottom card of home page ------->
 
@@ -169,7 +169,7 @@ class BottomCardSaved extends StatelessWidget {
                           width: 0.035 * width,
                           height: 0.035 * width,
                           decoration: new BoxDecoration(
-                            color: HexColor(item.categoryColor.toString()),
+                            color: HexColor(item.color.toString()),
                             shape: BoxShape.circle,
                           ),
                         ),

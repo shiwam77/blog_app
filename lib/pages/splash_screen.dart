@@ -45,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
         print("lng $lng");
         print("allMessages $localData");
         allMessages.value = Messages.fromJson(json.decode(localData));
+        print(allMessages.value);
         languageCode.value = Language.fromJson(json.decode(lng));
       } else {
         print("else ${currentUser.value.name}");

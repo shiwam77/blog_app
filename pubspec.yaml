@@ -80,6 +80,7 @@ dependencies:
   path_provider: ^2.0.14
   flutter_local_notifications: ^8.2.0
   material_design_icons_flutter: ^6.0.7096
+  share_plus: ^6.3.2
 
 
 dev_dependencies:

@@ -30,7 +30,6 @@ Dio dio = Dio();
 class UserProfile extends StatefulWidget {
   final bool useHeroWidget;
   UserProfile(this.useHeroWidget);
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   _UserProfileState createState() => _UserProfileState();
 }
@@ -40,6 +39,7 @@ class _UserProfileState extends State<UserProfile> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   UserController userController;
   var height, width;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final picker = ImagePicker();
 
@@ -55,7 +55,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -102,6 +102,7 @@ class _UserProfileState extends State<UserProfile> {
       isLoading: _isLoading,
       color: Colors.grey,
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Theme.of(context).cardColor,
         drawer: DrawerBuilder(),
         onDrawerChanged: (value) {
@@ -170,6 +171,7 @@ class _UserProfileState extends State<UserProfile> {
           }),
         ),
         body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: Column(
             children: <Widget>[
               Center(
@@ -202,6 +204,7 @@ class _UserProfileState extends State<UserProfile> {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: FullScreenWidget(
+                    disposeLevel: null,
                     child: Hero(
                       tag: widget.useHeroWidget ? 'photo' : "",
                       child: CircleAvatar(

@@ -32,26 +32,30 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          SizedBox(
-            height: 30,
-          ),
-          _buildTextFields(),
-          SizedBox(
-            height: 20,
-          ),
-          _buildSignInButton(context),
-          _buildOldUserRichText(),
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            SizedBox(
+              height: 30,
+            ),
+            _buildTextFields(),
+            SizedBox(
+              height: 20,
+            ),
+            _buildSignInButton(context),
+            _buildOldUserRichText(),
+          ],
+        ),
       ),
     );
   }

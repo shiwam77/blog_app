@@ -3,13 +3,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:incite/app_theme.dart';
 import 'package:incite/elements/card_item.dart';
 import 'package:incite/elements/drawer_builder.dart';
-import 'package:incite/models/blog_category.dart';
 import 'package:incite/providers/app_provider.dart';
 import 'package:incite/repository/user_repository.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
@@ -17,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/home_controller.dart';
+import '../models/blog_model.dart';
 import 'e_news.dart';
 import 'live_news.dart';
 //import 'package:http/http.dart' as http;
@@ -44,7 +43,7 @@ class _HomeClonePageState extends StateMVC<HomeClonePage>
   var height, width;
   bool showTopTabBar = false;
 
-  BlogCategory blogCategory;
+  IgBlog blogCategory;
   List<Blog> blogList = [];
 
   @override
@@ -75,7 +74,7 @@ class _HomeClonePageState extends StateMVC<HomeClonePage>
       },
     );
     Map data = json.decode(result.body);
-    BlogCategory category = BlogCategory.fromMap(data);
+    IgBlog category = IgBlog.fromJson(data);
     setState(() {
       blogCategory = category;
       // tabController =
@@ -99,8 +98,8 @@ class _HomeClonePageState extends StateMVC<HomeClonePage>
     );
     Map data = json.decode(result.body);
     print(data);
-    final list =
-        (data['data'] as List).map((i) => new Blog.fromMap(i)).toList();
+    final list = IgBlog.fromJson(data).data.data.toList();
+
     setState(() {
       blogList = list;
       _isLoading = false;
@@ -183,12 +182,16 @@ class _HomeClonePageState extends StateMVC<HomeClonePage>
 
   buildAppBar(BuildContext context) {
     return AppBar(
-      bottom: showTopTabBar
-          ? _buildTabBar()
-          : PreferredSize(
-              preferredSize: Size(0, 0),
-              child: Container(),
-            ),
+      // bottom: showTopTabBar
+      //     ? _buildTabBar()
+      //     : PreferredSize(
+      //         preferredSize: Size(0, 0),
+      //         child: Container(),
+      //       ),
+      bottom: PreferredSize(
+        preferredSize: Size(0, 0),
+        child: Container(),
+      ),
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).canvasColor,
 
@@ -349,33 +352,33 @@ class _HomeClonePageState extends StateMVC<HomeClonePage>
     );
   }
 
-  _buildTabBar() {
-    return TabBar(
-        indicatorColor: Colors.transparent,
-        controller: tabController,
-        onTap: setTabIndex,
-        isScrollable: true,
-        tabs: blogCategory.data
-            .map((e) => Tab(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    e.name,
-                    style: Theme.of(context).textTheme.bodyText1.merge(
-                          TextStyle(
-                              color: e.index == currentTabIndex
-                                  ? appThemeModel.value.isDarkModeEnabled.value
-                                      ? Colors.white
-                                      : Colors.black
-                                  : Colors.grey,
-                              fontFamily: GoogleFonts.notoSans().fontFamily,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w600),
-                        ),
-                  ),
-                )))
-            .toList());
-  }
+  // _buildTabBar() {
+  //   return TabBar(
+  //       indicatorColor: Colors.transparent,
+  //       controller: tabController,
+  //       onTap: setTabIndex,
+  //       isScrollable: true,
+  //       tabs: blogCategory.data
+  //           .map((e) => Tab(
+  //                   child: Padding(
+  //                 padding: const EdgeInsets.all(8.0),
+  //                 child: Text(
+  //                   e.name,
+  //                   style: Theme.of(context).textTheme.bodyText1.merge(
+  //                         TextStyle(
+  //                             color: e.index == currentTabIndex
+  //                                 ? appThemeModel.value.isDarkModeEnabled.value
+  //                                     ? Colors.white
+  //                                     : Colors.black
+  //                                 : Colors.grey,
+  //                             fontFamily: GoogleFonts.notoSans().fontFamily,
+  //                             fontSize: 15.0,
+  //                             fontWeight: FontWeight.w600),
+  //                       ),
+  //                 ),
+  //               )))
+  //           .toList());
+  // }
 
   setTabIndex(int value) {
     setState(() {
@@ -474,8 +477,8 @@ class _HomeClonePageState extends StateMVC<HomeClonePage>
                     ),
                   );
                 })
-              : List.generate(blogCategory.data.length + 2, (index) {
-                  if (index == blogCategory.data.length) {
+              : List.generate(blogCategory.data.data.length + 2, (index) {
+                  if (index == blogCategory.data.data.length) {
                     return newCategories(
                         title: allMessages.value.eNews,
                         image: "assets/img/app_icon.png",
@@ -483,7 +486,7 @@ class _HomeClonePageState extends StateMVC<HomeClonePage>
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) => Enews()));
                         });
-                  } else if (index == blogCategory.data.length + 1) {
+                  } else if (index == blogCategory.data.data.length + 1) {
                     return newCategories(
                         title: allMessages.value.liveNews,
                         image: "assets/img/app_icon.png",
@@ -499,7 +502,7 @@ class _HomeClonePageState extends StateMVC<HomeClonePage>
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).pushNamed('/CategoryPostPage',
-                            arguments: blogCategory.data[index].id);
+                            arguments: blogCategory.data.data[index].id);
                       },
                       child: Container(
                         height: 500,
@@ -517,7 +520,7 @@ class _HomeClonePageState extends StateMVC<HomeClonePage>
                                       child: ClipRRect(
                                         child: Container(
                                             child: Image.network(
-                                          blogCategory.data[index].image,
+                                          blogCategory.data.data[index].image,
                                           fit: BoxFit.cover,
                                           loadingBuilder: (BuildContext context,
                                               Widget child,

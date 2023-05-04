@@ -1,6 +1,8 @@
 //@dart=2.9
 
-import 'package:incite/models/blog_category.dart';
+// import 'package:incite/models/blog_category.dart';
+
+import '../models/blog_model.dart';
 
 class BlogListHolder {
   List<Blog> _list = [];
@@ -18,8 +20,8 @@ class BlogListHolder {
   }
 
   void clearList() {
-    this._list = new List();
+    this._list = [];
   }
 }
 
-BlogListHolder blogListHolder = new BlogListHolder();
+BlogListHolder blogListHolder = BlogListHolder();

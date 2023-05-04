@@ -18,14 +18,15 @@ import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 import 'package:incite/elements/video_player.dart';
 import 'package:incite/helpers/helper.dart';
-import 'package:incite/models/blog_category.dart';
 import 'package:incite/repository/user_repository.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import '../app_theme.dart';
+import '../models/blog_model.dart';
 import 'read_blog_screenshot.dart';
 import 'web_view.dart';
 
@@ -166,7 +167,7 @@ class _ReadBlogState extends State<ReadBlog> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initLanguages();
     });
-    if (getCurrentItem().isBookmarked == 1) {
+    if (getCurrentItem().isBookmark == 1) {
       isBookmark = true;
     } else {
       isBookmark = false;
@@ -387,7 +388,7 @@ class _ReadBlogState extends State<ReadBlog> {
                               topLeft: Radius.circular(15.0),
                               topRight: Radius.circular(15.0),
                             ),
-                            color: HexColor("#F9F9F9"),
+                            color: Color(0xffF9F9F9),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.only(
@@ -398,8 +399,8 @@ class _ReadBlogState extends State<ReadBlog> {
                                   width: 0.035 * width,
                                   height: 0.035 * width,
                                   decoration: new BoxDecoration(
-                                    color: HexColor(
-                                        widget.item.categoryColor.toString()),
+                                    // color:
+                                    //     HexColor(widget.item.color.toString()),
                                     //color: Colors.orange,
                                     shape: BoxShape.circle,
                                   ),
@@ -514,7 +515,7 @@ class _ReadBlogState extends State<ReadBlog> {
                                           child: Text(
                                             text,
                                             maxLines: getCurrentItem()
-                                                            .isVotingEnabled ==
+                                                            .isVotingEnable ==
                                                         1 &&
                                                     currentUser.value.id != null
                                                 ? (height / 60).toInt()
@@ -588,8 +589,7 @@ class _ReadBlogState extends State<ReadBlog> {
                       ),
                     )
                   : Container(),
-              currentUser.value.id != null &&
-                      getCurrentItem().isVotingEnabled == 1
+              currentUser.value.id != null && getCurrentItem().isVote == 1
                   ? _buildVotingCard()
                   : Container(),
             ],
@@ -1184,7 +1184,7 @@ class _ReadBlogState extends State<ReadBlog> {
     print("response $data");
 
     isBookmark = true;
-    getCurrentItem().isBookmarked = data['data']['is_bookmark'];
+    getCurrentItem().isBookmark = data['data']['is_bookmark'];
     Fluttertoast.showToast(
         msg: data['message'],
         toastLength: Toast.LENGTH_SHORT,
@@ -1210,8 +1210,8 @@ class _ReadBlogState extends State<ReadBlog> {
     );
     print("swipe blog data ${response.body}");
     Map data = json.decode(response.body);
-    final list =
-        (data['data'] as List).map((i) => new Blog.fromMap(i)).toList();
+    final list = IgBlog.fromJson(data).data.data.toList();
+
     setState(() {
       blogList = list;
       Navigator.of(context).pushNamed("/ReadBlog", arguments: blogList[0]);
@@ -1271,7 +1271,7 @@ class _ReadBlogState extends State<ReadBlog> {
       getCurrentItem().isVote = data['data']['is_vote'];
       getCurrentItem().yesPercent = data['data']['yes_percent'];
       getCurrentItem().noPercent = data['data']['no_percent'];
-      getCurrentItem().isBookmarked = data['data']['is_bookmark'];
+      getCurrentItem().isBookmark = data['data']['is_bookmark'];
       _isLoading = false;
     });
   }
@@ -1309,9 +1309,21 @@ class _ReadBlogState extends State<ReadBlog> {
 
   shareImage() async {
     BotToast.showLoading();
-    var pngBytes = await _capturePng();
-    print("pngBytes $pngBytes");
+    // var pngBytes = await _capturePng();
+    // print("pngBytes $pngBytes");
     try {
+      RenderRepaintBoundary boundary = scr.currentContext.findRenderObject();
+      if (boundary == null) {
+        shareImage();
+        return;
+      }
+      print(allMessages.value.shareMessage);
+      final shareResult = await Share.share(
+        allMessages.value.shareMessage,
+        sharePositionOrigin:
+            boundary.localToGlobal(Offset.zero) & boundary.size,
+      );
+      // print(shareResult);
       // await Share.file(
       //   'esys image',
       //   'esys.png',

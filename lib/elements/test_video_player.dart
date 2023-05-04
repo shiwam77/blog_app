@@ -2,9 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:incite/models/blog_category.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' as convert;
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import '../models/blog_model.dart';
 //import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class CustomVideoPlayer extends StatefulWidget {

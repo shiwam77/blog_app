@@ -8,14 +8,12 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:incite/app_theme.dart';
 import 'package:incite/data/blog_list_holder.dart';
 import 'package:incite/elements/card_item.dart';
 import 'package:incite/elements/drawer_builder.dart';
-import 'package:incite/models/blog_category.dart';
 import 'package:incite/pages/SwipeablePage.dart';
 import 'package:incite/providers/app_provider.dart';
 import 'package:incite/repository/user_repository.dart';
@@ -25,6 +23,8 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/home_controller.dart';
+// import 'package:incite/models/blog_category.dart';
+import '../models/blog_model.dart';
 import 'e_news.dart';
 import 'live_news.dart';
 
@@ -184,12 +184,16 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
       scaffoldKey.currentState.openEndDrawer();
     }
     return AppBar(
-      bottom: showTopTabBar
-          ? _buildTabBar()
-          : PreferredSize(
-              preferredSize: Size(0, 0),
-              child: Container(),
-            ),
+      // bottom: showTopTabBar
+      //     ? _buildTabBar()
+      //     : PreferredSize(
+      //         preferredSize: Size(0, 0),
+      //         child: Container(),
+      //       ),
+      bottom: PreferredSize(
+        preferredSize: Size(0, 0),
+        child: Container(),
+      ),
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).canvasColor,
       elevation: 0,
@@ -365,9 +369,7 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                           print(
                               "result ${data['data'].length} ${currentUser.value.id} ${languageCode.value?.language ?? "null"}");
 
-                          final list = (data['data'] as List)
-                              .map((i) => new Blog.fromMap(i))
-                              .toList();
+                          final list = IgBlog.fromJson(data).data.data.toList();
 
                           for (Blog item in list)
                             print(" HOMEPAGE FEED :" + item.title);
@@ -427,12 +429,13 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                   itemCount: 10,
                 )
               : ListView.builder(
-                  shrinkWrap: true,
+                  shrinkWrap: false,
                   addAutomaticKeepAlives: true,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return CardItem(
                         snapshot.blogList[index], index, snapshot.blogList);
+                    // return Text("hello $index");
                   },
                   itemCount: snapshot.blogList.length,
                 );
@@ -441,36 +444,36 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  _buildTabBar() {
-    return Consumer<AppProvider>(builder: (context, snapshot, _) {
-      return TabBar(
-          indicatorColor: Colors.transparent,
-          controller: tabController,
-          onTap: setTabIndex,
-          isScrollable: true,
-          tabs: snapshot.blog.data
-              .map((e) => Tab(
-                      child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      e.name,
-                      style: Theme.of(context).textTheme.bodyText1.merge(
-                            TextStyle(
-                                color: e.index == currentTabIndex
-                                    ? appThemeModel
-                                            .value.isDarkModeEnabled.value
-                                        ? Colors.white
-                                        : Colors.black
-                                    : Colors.grey,
-                                fontFamily: GoogleFonts.notoSans().fontFamily,
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w600),
-                          ),
-                    ),
-                  )))
-              .toList());
-    });
-  }
+  // _buildTabBar() {
+  //   return Consumer<AppProvider>(builder: (context, snapshot, _) {
+  //     return TabBar(
+  //         indicatorColor: Colors.transparent,
+  //         controller: tabController,
+  //         onTap: setTabIndex,
+  //         isScrollable: true,
+  //         tabs: snapshot.blog.data.data.
+  //             .map((e) => Tab(
+  //                     child: Padding(
+  //                   padding: const EdgeInsets.all(8.0),
+  //                   child: Text(
+  //                     e.name,
+  //                     style: Theme.of(context).textTheme.bodyText1.merge(
+  //                           TextStyle(
+  //                               color: e.index == currentTabIndex
+  //                                   ? appThemeModel
+  //                                           .value.isDarkModeEnabled.value
+  //                                       ? Colors.white
+  //                                       : Colors.black
+  //                                   : Colors.grey,
+  //                               fontFamily: GoogleFonts.notoSans().fontFamily,
+  //                               fontSize: 15.0,
+  //                               fontWeight: FontWeight.w600),
+  //                         ),
+  //                   ),
+  //                 )))
+  //             .toList());
+  //   });
+  // }
 
   setTabIndex(int value) {
     setState(() {
@@ -529,8 +532,8 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                         ),
                       );
                     })
-                  : List.generate(snapshot.blog.data.length + 2, (index) {
-                      if (index == snapshot.blog.data.length) {
+                  : List.generate(snapshot.blog.data.data.length + 2, (index) {
+                      if (index == snapshot.blog.data.data.length) {
                         return newCategories(
                             title: allMessages?.value?.eNews ?? "",
                             image: "assets/img/app_icon.png",
@@ -540,7 +543,7 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                                   MaterialPageRoute(
                                       builder: (context) => Enews()));
                             });
-                      } else if (index == snapshot.blog.data.length + 1) {
+                      } else if (index == snapshot.blog.data.data.length + 1) {
                         return newCategories(
                             title: allMessages?.value?.liveNews ?? "",
                             image: "assets/img/app_icon.png",
@@ -569,11 +572,11 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                               snapshot.setLoading(load: true);
 
                               final msg = jsonEncode({
-                                "category_id": snapshot.blog.data[index].id
+                                "category_id": snapshot.blog.data.data[index].id
                                 //"user_id": currentUser.value.id
                               });
                               print(
-                                  "blogCategory.data[index].id ${snapshot.blog.data[index].id}");
+                                  "blogCategory.data[index].id ${snapshot.blog.data.data[index].id}");
                               final String url =
                                   'https://incite.technofox.co.in/api/AllBookmarkPost';
                               final client = new http.Client();
@@ -590,9 +593,8 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                               print(
                                   "API in home page response ${response.body}");
                               Map data = json.decode(response.body);
-                              final list = (data['data'] as List)
-                                  .map((i) => new Blog.fromMap(i))
-                                  .toList();
+                              final list =
+                                  IgBlog.fromJson(data).data.data.toList();
 
                               print("List Size for index $index : " +
                                   list.length.toString());
@@ -624,9 +626,9 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                             },
                             child: Container(
                               child: CachedNetworkImage(
-                                imageUrl: snapshot.blog.data[index].image,
+                                imageUrl: snapshot.blog.data.data[index].image,
                                 fit: BoxFit.fitWidth,
-                                cacheKey: snapshot.blog.data[index].image,
+                                cacheKey: snapshot.blog.data.data[index].image,
                               ),
                             ),
                           ),

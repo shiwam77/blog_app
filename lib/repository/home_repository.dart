@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../helpers/helper.dart';
-import '../models/blog_category.dart';
+import '../models/blog_model.dart';
 import '../models/home.dart';
 
 Future<Stream<Home>> getBlog() async {
@@ -28,11 +28,11 @@ Future<Stream<Home>> getBlog() async {
         .expand((data) => (data as List))
         .map((data) => Home.fromJSON(data));
   } catch (e) {
-    return new Stream.value(new Home.fromJSON({}));
+    return Stream.value(new Home.fromJSON({}));
   }
 }
 
-Future<Stream<BlogCategory>> getCategory() async {
+Future<Stream<IgBlog>> getCategory() async {
   Uri uri = Helper.getUri('api/blog-category-list');
   Map<String, dynamic> _queryParams = {};
   uri = uri.replace(queryParameters: _queryParams);
@@ -44,8 +44,8 @@ Future<Stream<BlogCategory>> getCategory() async {
         .transform(json.decoder)
         .map((data) => Helper.getData(data as Map<String, dynamic>))
         .expand((data) => (data as List))
-        .map((data) => BlogCategory.fromMap(json.decode(data)));
+        .map((data) => IgBlog.fromJson(json.decode(data)));
   } catch (e) {
-    return new Stream.value(new BlogCategory());
+    return Stream.value(new IgBlog());
   }
 }

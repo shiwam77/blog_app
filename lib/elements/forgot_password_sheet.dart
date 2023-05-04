@@ -33,28 +33,32 @@ class _ForgotPasswordSheetState extends State<ForgotPasswordSheet> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          SizedBox(
-            height: 30,
-          ),
-          _buildTextFields(),
-          SizedBox(
-            height: 20.0,
-          ),
-          _buildSignInButton(context),
-          SizedBox(
-            height: 0.05 * height,
-          ),
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            SizedBox(
+              height: 30,
+            ),
+            _buildTextFields(),
+            SizedBox(
+              height: 20.0,
+            ),
+            _buildSignInButton(context),
+            SizedBox(
+              height: 0.05 * height,
+            ),
+          ],
+        ),
       ),
     );
   }

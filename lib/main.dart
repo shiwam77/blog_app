@@ -14,7 +14,7 @@ import 'package:incite/route_generator.dart';
 import 'package:provider/provider.dart';
 
 import 'helpers/shared_pref_utils.dart';
-import 'models/blog_category.dart';
+import 'models/blog_model.dart';
 import 'models/language.dart';
 import 'models/setting.dart';
 

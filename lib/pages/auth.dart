@@ -14,13 +14,14 @@ import 'package:incite/controllers/user_controller.dart';
 import 'package:incite/data/blog_list_holder.dart';
 import 'package:incite/elements/sign_in_bottom_sheet.dart';
 import 'package:incite/helpers/shared_pref_utils.dart';
-import 'package:incite/models/blog_category.dart';
 import 'package:incite/models/setting.dart';
 import 'package:incite/models/user.dart';
 import 'package:incite/pages/SwipeablePage.dart';
 import 'package:incite/repository/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// import 'package:incite/models/blog_category.dart';
+import '../models/blog_model.dart';
 import 'home_page.dart';
 
 SharedPreferences prefs;
@@ -123,8 +124,7 @@ class _AuthPageState extends State<AuthPage> {
       },
     );
     Map data = json.decode(result.body);
-    final list =
-        (data['data'] as List).map((i) => new Blog.fromMap(i)).toList();
+    final list = IgBlog.fromJson(data).data.data.toList();
     if (this.mounted) {
       setState(() {
         blogListHolder.clearList();

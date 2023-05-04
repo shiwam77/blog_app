@@ -3,11 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:incite/data/blog_list_holder.dart';
-import 'package:incite/models/blog_category.dart';
 import 'package:incite/pages/SwipeablePage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../app_theme.dart';
+// import 'package:incite/models/blog_category.dart';
+import '../models/blog_model.dart';
 
 //* <------- Bottom card of home page ------->
 
@@ -174,7 +175,7 @@ class BottomCard extends StatelessWidget {
                           width: 0.035 * width,
                           height: 0.035 * width,
                           decoration: new BoxDecoration(
-                            color: HexColor(item.categoryColor.toString()),
+                            color: HexColor(item.color.toString()),
                             //color: Colors.orange,
                             shape: BoxShape.circle,
                           ),
