@@ -11,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:incite/app_theme.dart';
+import 'package:incite/controllers/user_controller.dart';
 import 'package:incite/data/blog_list_holder.dart';
 import 'package:incite/elements/card_item.dart';
 import 'package:incite/elements/drawer_builder.dart';
@@ -20,6 +21,7 @@ import 'package:incite/repository/user_repository.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/home_controller.dart';
@@ -34,6 +36,39 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(HomePage());
+}
+
+class HomePageLoadingScreen extends StatefulWidget {
+  const HomePageLoadingScreen({Key key}) : super(key: key);
+
+  @override
+  State<HomePageLoadingScreen> createState() => _HomePageLoadingScreenState();
+}
+
+class _HomePageLoadingScreenState extends State<HomePageLoadingScreen> {
+  @override
+  void initState() {
+    AppProvider provider = Provider.of<AppProvider>(context, listen: false);
+    provider
+      ..getBlogData().then((value) {
+        provider
+          ..getCategory().then((value) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => HomePage()),
+                (Route<dynamic> route) => false);
+          });
+      });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LoadingOverlay(
+      isLoading: true,
+      color: Colors.grey,
+      child: Scaffold(),
+    );
+  }
 }
 
 class HomePage extends StatefulWidget {
@@ -73,16 +108,27 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
   bool showTopTabBar = false;
   String localLanguage;
 
+  bool _userLog = false;
+  UserController userController = UserController();
+
   @override
   void initState() {
     super.initState();
     print("Home Page");
     getCurrentUser();
-    localLanguage = languageCode.value.language;
+    getLocalLanguage();
     currentUser.value.isPageHome = true;
     homeController = HomeController();
     scrollController = ScrollController(initialScrollOffset: 0);
     scrollController.addListener(scrollControllerListener);
+  }
+
+  getLocalLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String localData = prefs.getString("defalut_language");
+    Map<String, dynamic> mappedData = jsonDecode(localData);
+    localLanguage = mappedData["language"];
+    print(localLanguage);
   }
 
   scrollControllerListener() {

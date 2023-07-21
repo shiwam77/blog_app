@@ -334,17 +334,19 @@ class UserController extends ControllerMVC {
     }).whenComplete(() {});
   }
 
-  getLanguageFromServer() async {
+  Future<void> getLanguageFromServer() async {
     await repository.getLocalText().then((value) {
       if (value != null) {
         repository.allMessages.value = value;
         print("repository ${repository.allMessages.value.skip}");
       }
+      return;
     }).catchError((e) {
       ScaffoldMessenger.of(scaffoldKey.currentContext).showSnackBar(SnackBar(
         content: Text(repository.allMessages.value.noLanguageFound),
       ));
-    }).whenComplete(() {});
+      throw e;
+    });
   }
 
   getAllAvialbleLanguages() async {

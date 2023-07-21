@@ -6,12 +6,14 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:incite/controllers/user_controller.dart';
 import 'package:incite/repository/user_repository.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../appColors.dart';
+import '../providers/app_provider.dart';
 
 class LanguageSelection extends StatefulWidget {
-  final isInHomePage;
+  bool isInHomePage;
   LanguageSelection({this.isInHomePage = false});
   @override
   _LanguageSelectionState createState() => _LanguageSelectionState();
@@ -77,23 +79,37 @@ class _LanguageSelectionState extends State<LanguageSelection> {
                     onTap: () async {
                       BotToast.showLoading();
                       languageCode.value = allLanguages[index];
+                      print(languageCode.value);
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       prefs.setString("defalut_language",
                           json.encode(languageCode.value.toJson()));
                       prefs.setString("local_data",
                           json.encode(allMessages.value.toJson()));
-                      await userController.getLanguageFromServer();
-                      BotToast.cleanAll();
-                      if (!widget.isInHomePage) {
-                        Navigator.pushReplacementNamed(context, '/AuthPage');
-                      } else {
-                        if (currentUser.value.name != null) {
-                          userController.updateLanguage();
+                      userController.getLanguageFromServer().then((value) {
+                        if (!widget.isInHomePage) {
+                          AppProvider provider =
+                              Provider.of<AppProvider>(context, listen: false);
+                          provider
+                            ..getBlogData().then((value) {
+                              provider
+                                ..getCategory().then((value) {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      '/AuthPage',
+                                      (Route route) => route.isFirst);
+                                });
+                            });
+                        } else {
+                          if (currentUser.value.name != null) {
+                            userController.updateLanguage();
+                          }
+                          Navigator.pop(context, false);
+                          Navigator.pop(context, true);
                         }
-                        Navigator.pop(context, false);
-                        Navigator.pop(context, true);
-                      }
+                      });
+
+                      BotToast.cleanAll();
                     },
                     child: Container(
                       margin: EdgeInsets.only(

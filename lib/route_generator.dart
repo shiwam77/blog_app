@@ -25,13 +25,15 @@ class RouteGenerator {
       case '/SplashScreen':
         return MaterialPageRoute(builder: (context) => SplashScreen());
       case '/LanguageSelection':
+        final args = settings.arguments as bool;
+
         return MaterialPageRoute(
           builder: (context) => LanguageSelection(
             isInHomePage: args,
           ),
         );
       case '/MainPage':
-        return MaterialPageRoute(builder: (context) => HomePage());
+        return MaterialPageRoute(builder: (context) => HomePageLoadingScreen());
       case '/HomeClonePage':
         return MaterialPageRoute(builder: (context) => HomeClonePage());
       case '/ReadBlog':
