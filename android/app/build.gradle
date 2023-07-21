@@ -69,9 +69,18 @@ android {
         }
     }
     buildTypes {
+
+        debug {
+            signingConfig signingConfigs.debug
+            manifestPlaceholders = [usesCleartextTraffic:"true"]
+            applicationIdSuffix ".dev"
+        }
+
         release {
             shrinkResources false
             minifyEnabled false
+            manifestPlaceholders = [usesCleartextTraffic:"false"]
+
             signingConfig signingConfigs.debug
         }
     }

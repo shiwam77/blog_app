@@ -11,7 +11,7 @@ import 'package:incite/repository/user_repository.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../app_theme.dart';
-import '../models/blog_model.dart';
+import '../models/blog_category.dart';
 
 //* <------- Bottom card of home page ------->
 
@@ -29,7 +29,7 @@ class BottomCardSaved extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 20.0, left: 13.0, right: 20.0),
       child: Center(
         child: Container(
-          width: double.infinity,
+          width: width,
           height: 0.2 * height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.0),
@@ -111,7 +111,7 @@ class BottomCardSaved extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10.0),
                 child: GestureDetector(
                   child: Container(
-                    width: 0.48 * width,
+                    width: 0.48 * width - 15,
                     child: Text(
                       item.title,
                       style: Theme.of(context).textTheme.bodyText1.merge(
@@ -156,7 +156,7 @@ class BottomCardSaved extends StatelessWidget {
           ),
           Spacer(),
           Container(
-            width: width * 0.53,
+            width: width * 0.53 - 8,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 4.0),
               child: Row(
@@ -169,7 +169,9 @@ class BottomCardSaved extends StatelessWidget {
                           width: 0.035 * width,
                           height: 0.035 * width,
                           decoration: new BoxDecoration(
-                            color: HexColor(item.color.toString()),
+                            color: item.color.toString().isNotEmpty
+                                ? HexColor(item.color.toString())
+                                : Colors.grey.withOpacity(.9),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -177,7 +179,9 @@ class BottomCardSaved extends StatelessWidget {
                           width: 5,
                         ),
                         Text(
-                          item.categoryName,
+                          item.categoryName.isNotEmpty
+                              ? item.categoryName
+                              : "News",
                           style: Theme.of(context).textTheme.bodyText1.merge(
                                 TextStyle(
                                   color: appThemeModel

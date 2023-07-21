@@ -5,7 +5,7 @@
     "storage_bucket": "incite-661cc.appspot.com"
   },
   "client": [
-    {
+     {
       "client_info": {
         "mobilesdk_app_id": "1:845175058233:android:dbb940a7c4f94025dfc2e8",
         "android_client_info": {

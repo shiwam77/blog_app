@@ -24,7 +24,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../controllers/home_controller.dart';
 // import 'package:incite/models/blog_category.dart';
-import '../models/blog_model.dart';
+import '../models/blog_category.dart';
 import 'e_news.dart';
 import 'live_news.dart';
 
@@ -139,7 +139,8 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                   _buildRecommendationCards(),
                   _buildTabText(),
                   Consumer<AppProvider>(builder: (context, snapshot, _) {
-                    return snapshot.blog == null
+                    return snapshot.blogCategory == null ||
+                            snapshot.blogCategory.data == null
                         ? Container()
                         : _buildTabView();
                   }),
@@ -354,36 +355,43 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                           ),
                         ),
                         onPressed: () async {
-                          snapshot.setLoading(load: true);
-                          var url =
-                              "https://incite.technofox.co.in/api/blog-all-list";
-                          var result = await http.get(
-                            Uri.parse(url),
-                            headers: {
-                              "Content-Type": "application/json",
-                              'userData': currentUser.value.id,
-                              "lang-code": languageCode.value?.language ?? null
-                            },
-                          );
-                          Map data = json.decode(result.body);
-                          print(
-                              "result ${data['data'].length} ${currentUser.value.id} ${languageCode.value?.language ?? "null"}");
+                          try {
+                            snapshot.setLoading(load: true);
+                            var url =
+                                "https://incite.technofox.co.in/api/blog-all-list";
+                            var result = await http.get(
+                              Uri.parse(url),
+                              headers: {
+                                "Content-Type": "application/json",
+                                'userData': currentUser.value.id,
+                                "lang-code":
+                                    languageCode.value?.language ?? null
+                              },
+                            );
+                            Map data = json.decode(result.body);
+                            print(
+                                "result ${data['data'].length} ${currentUser.value.id} ${languageCode.value?.language ?? "null"}");
 
-                          final list = IgBlog.fromJson(data).data.data.toList();
+                            List<Blog> blogList =
+                                MyFeed.fromJson(data).data.data;
 
-                          for (Blog item in list)
-                            print(" HOMEPAGE FEED :" + item.title);
-
-                          if (list.length > 0) {
-                            snapshot.setLoading(load: false);
-                            setState(() {
+                            if (blogList.length > 0) {
                               blogListHolder.clearList();
-                              blogListHolder.setList(list);
+                              blogListHolder.setList(blogList);
                               blogListHolder.setIndex(0);
-                            });
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SwipeablePage(0),
-                            ));
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(
+                                builder: (context) => SwipeablePage(0),
+                              ))
+                                  .then((value) {
+                                blogListHolder.clearList();
+                                blogListHolder.setList(snapshot.blogList);
+                              });
+                            }
+                          } catch (e) {
+                            print(e);
+                          } finally {
+                            snapshot.setLoading(load: false);
                           }
                         }),
                   );
@@ -518,7 +526,8 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
               controller: new TrackingScrollController(keepScrollOffset: false),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              children: snapshot.blog == null
+              children: snapshot.blogCategory == null ||
+                      snapshot.blogCategory.data == null
                   ? List.generate(9, (index) {
                       return Shimmer.fromColors(
                         baseColor: Colors.grey[100],
@@ -532,8 +541,9 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                         ),
                       );
                     })
-                  : List.generate(snapshot.blog.data.data.length + 2, (index) {
-                      if (index == snapshot.blog.data.data.length) {
+                  : List.generate(snapshot.blogCategory.data.length + 2,
+                      (index) {
+                      if (index == snapshot.blogCategory.data.length) {
                         return newCategories(
                             title: allMessages?.value?.eNews ?? "",
                             image: "assets/img/app_icon.png",
@@ -543,7 +553,8 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                                   MaterialPageRoute(
                                       builder: (context) => Enews()));
                             });
-                      } else if (index == snapshot.blog.data.data.length + 1) {
+                      } else if (index ==
+                          snapshot.blogCategory.data.length + 1) {
                         return newCategories(
                             title: allMessages?.value?.liveNews ?? "",
                             image: "assets/img/app_icon.png",
@@ -559,6 +570,7 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                         child: Container(
                           margin: EdgeInsets.all(10),
                           decoration: BoxDecoration(
+                            color: Colors.white,
                             boxShadow: [
                               BoxShadow(
                                   color: Colors.black38.withOpacity(0.1),
@@ -569,66 +581,80 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                           ),
                           child: GestureDetector(
                             onTap: () async {
-                              snapshot.setLoading(load: true);
+                              try {
+                                snapshot.setLoading(load: true);
 
-                              final msg = jsonEncode({
-                                "category_id": snapshot.blog.data.data[index].id
-                                //"user_id": currentUser.value.id
-                              });
-                              print(
-                                  "blogCategory.data[index].id ${snapshot.blog.data.data[index].id}");
-                              final String url =
-                                  'https://incite.technofox.co.in/api/AllBookmarkPost';
-                              final client = new http.Client();
-                              final response = await client.post(
-                                Uri.parse(url),
-                                headers: {
-                                  "Content-Type": "application/json",
-                                  'userData': currentUser.value.id,
-                                  "lang-code":
-                                      languageCode.value?.language ?? null
-                                },
-                                body: msg,
-                              );
-                              print(
-                                  "API in home page response ${response.body}");
-                              Map data = json.decode(response.body);
-                              final list =
-                                  IgBlog.fromJson(data).data.data.toList();
-
-                              print("List Size for index $index : " +
-                                  list.length.toString());
-                              snapshot.setLoading(load: false);
-
-                              for (Blog item in list) {
-                                print("item.title ${item.title}");
-                              }
-
-                              if (list.length > 0) {
-                                blogListHolder.clearList();
-                                blogListHolder.setList(list);
-                                blogListHolder.setIndex(0);
-                                Blog item = blogListHolder.getList()[0];
-                                print("for FB ${item.title}");
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) {
-                                    return SwipeablePage(0);
-                                  }),
-                                ).then((value) {
-                                  blogListHolder.clearList();
-                                  blogListHolder.setList(snapshot.blogList);
+                                final msg = jsonEncode({
+                                  "category_id":
+                                      snapshot.blogCategory.data[index].id
+                                  //"user_id": currentUser.value.id
                                 });
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: allMessages?.value?.noNewsAvilable ??
-                                        "");
+                                print(
+                                    "blogCategory.data[index].id ${snapshot.blogCategory.data[index].id}");
+                                final String url =
+                                    'https://incite.technofox.co.in/api/AllBookmarkPost';
+                                final client = new http.Client();
+                                final response = await client.post(
+                                  Uri.parse(url),
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                    'userData': currentUser.value.id,
+                                    "lang-code":
+                                        languageCode.value?.language ?? null
+                                  },
+                                  body: msg,
+                                );
+                                print(
+                                    "API in home page response ${response.body}");
+                                Map data = json.decode(response.body);
+                                List<Blog> blogList =
+                                    FilteredBlog.fromJson(data).data.toList();
+
+                                for (Blog item in blogList) {
+                                  print("item.title ${item.title}");
+                                }
+
+                                if (blogList.length > 0) {
+                                  blogListHolder.clearList();
+                                  blogListHolder.setList(blogList);
+                                  blogListHolder.setIndex(0);
+
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) {
+                                      return SwipeablePage(0);
+                                    }),
+                                  ).then((value) {
+                                    blogListHolder.clearList();
+                                    blogListHolder.setList(snapshot.blogList);
+                                  });
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: allMessages?.value?.noNewsAvilable ??
+                                          "");
+                                }
+                              } catch (e) {
+                                print(e);
+                              } finally {
+                                snapshot.setLoading(load: false);
                               }
                             },
                             child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black38.withOpacity(0.1),
+                                      blurRadius: 5.0,
+                                      offset: Offset(0.0, 0.0),
+                                      spreadRadius: 1.0)
+                                ],
+                              ),
                               child: CachedNetworkImage(
-                                imageUrl: snapshot.blog.data.data[index].image,
-                                fit: BoxFit.fitWidth,
-                                cacheKey: snapshot.blog.data.data[index].image,
+                                imageUrl:
+                                    snapshot.blogCategory.data[index].image,
+                                fit: BoxFit.fill,
+                                cacheKey:
+                                    snapshot.blogCategory.data[index].image,
                               ),
                             ),
                           ),

@@ -52,7 +52,7 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
             SizedBox(
               height: 20,
             ),
-            _buildSignInButton(context),
+            _buildSignUpButton(context),
             _buildOldUserRichText(),
           ],
         ),
@@ -170,7 +170,7 @@ class _SignUpBottomSheetState extends State<SignUpBottomSheet> {
     );
   }
 
-  _buildSignInButton(BuildContext context) {
+  _buildSignUpButton(BuildContext context) {
     return Center(
       child: ButtonTheme(
         minWidth: 0.85 * width,

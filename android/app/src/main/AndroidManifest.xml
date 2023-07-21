@@ -3,6 +3,7 @@
    <application
         android:label="incite"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="${usesCleartextTraffic}"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

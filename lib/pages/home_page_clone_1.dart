@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/home_controller.dart';
+import '../models/blog_category.dart';
 import '../models/blog_model.dart';
 import 'e_news.dart';
 import 'live_news.dart';

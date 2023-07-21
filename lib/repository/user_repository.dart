@@ -107,15 +107,14 @@ Future<Users> login(Users user) async {
   }
 }
 
-Future<Users> googleLogin(GoogleSignInAccount user) async {
-  final authentication = await user.authentication;
+Future<Users> googleLogin(GoogleSignInAccount user, String accessToken) async {
   final _firebaseMessaging = FirebaseMessaging.instance;
   String token = await _firebaseMessaging.getToken();
   final msg = jsonEncode({
     "email": user.email,
     "name": user.displayName,
     "image": user.photoUrl,
-    "google_token": authentication.accessToken,
+    "google_token": accessToken,
     "device_token": token,
     "login_from": "google"
   });

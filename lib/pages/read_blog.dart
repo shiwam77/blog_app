@@ -26,6 +26,7 @@ import 'package:text_to_speech/text_to_speech.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import '../app_theme.dart';
+import '../models/blog_category.dart';
 import '../models/blog_model.dart';
 import 'read_blog_screenshot.dart';
 import 'web_view.dart';
@@ -501,10 +502,12 @@ class _ReadBlogState extends State<ReadBlog> {
                                 ),
                                 child: Builder(
                                   builder: (context) {
-                                    String text =
-                                        parse(getCurrentItem().description)
+                                    String text = parse(
+                                                getCurrentItem().description ??
+                                                    "No description")
                                             .body
-                                            .text;
+                                            .text ??
+                                        "No description";
                                     return Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -518,8 +521,8 @@ class _ReadBlogState extends State<ReadBlog> {
                                                             .isVotingEnable ==
                                                         1 &&
                                                     currentUser.value.id != null
-                                                ? (height / 60).toInt()
-                                                : (height / 50).toInt(),
+                                                ? (height / 65).toInt()
+                                                : (height / 55).toInt(),
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: appThemeModel.value

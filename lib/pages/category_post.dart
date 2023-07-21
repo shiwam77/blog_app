@@ -12,6 +12,7 @@ import 'package:loading_overlay/loading_overlay.dart';
 
 import '../app_theme.dart';
 // import 'package:incite/models/blog_category.dart';
+import '../models/blog_category.dart';
 import '../models/blog_model.dart';
 
 //* <----------- Search Blog Page -------------->
@@ -174,7 +175,7 @@ class _CategoryPostPageState extends State<CategoryPostPage> {
                         child: _isFound
                             ? Column(
                                 children: blogList
-                                    .map((e) => BottomCard(
+                                    .map((e) => SearchCard(
                                           e,
                                           blogList.indexOf(e),
                                           blogList,

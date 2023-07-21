@@ -9,7 +9,11 @@ import 'package:incite/helpers/shared_pref_utils.dart';
 import 'package:incite/models/language.dart';
 import 'package:incite/models/messages.dart';
 import 'package:incite/repository/user_repository.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../providers/app_provider.dart';
+import 'home_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key key}) : super(key: key);
@@ -65,8 +69,13 @@ class _SplashScreenState extends State<SplashScreen> {
       print("is user login $_userLog ${currentUser.value.name}");
       if (_userLog) {
         print("user is login");
-        Navigator.pushReplacementNamed(context, '/MainPage');
-        Navigator.pushNamed(context, '/LoadSwipePage');
+        Provider.of<AppProvider>(context, listen: false)
+          ..getBlogData()
+          ..getCategory().then((value) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => HomePage()),
+                (Route<dynamic> route) => false);
+          });
       } else {
         print(
             'prefs.containsKey("defalut_language") ${prefs.containsKey("defalut_language")}');

@@ -7,7 +7,7 @@ import 'package:incite/pages/SwipeablePage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 // import 'package:incite/models/blog_category.dart';
-import '../models/blog_model.dart';
+import '../models/blog_category.dart';
 
 class CardItem extends StatefulWidget {
   final int index;

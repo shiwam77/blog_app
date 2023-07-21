@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' as convert;
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
-import '../models/blog_model.dart';
+import '../models/blog_category.dart';
 
 class CustomVideoPlayer extends StatefulWidget {
   final Blog blog;

@@ -21,6 +21,7 @@ import 'package:incite/repository/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:incite/models/blog_category.dart';
+import '../models/blog_category.dart';
 import '../models/blog_model.dart';
 import 'home_page.dart';
 
@@ -46,7 +47,7 @@ class _AuthPageState extends State<AuthPage> {
   bool _isFacebookLogin = false;
   Future<Setting> futureAlbum;
   bool _userLog = false;
-  List<Blog> blogList = List();
+  List<Blog> blogList = <Blog>[];
   FirebaseMessaging _firebaseMessaging;
   //Users user = new Users();
 

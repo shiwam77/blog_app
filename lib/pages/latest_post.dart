@@ -12,7 +12,7 @@ import 'package:loading_overlay/loading_overlay.dart';
 
 import '../app_theme.dart';
 // import 'package:incite/models/blog_category.dart';
-import '../models/blog_model.dart';
+import '../models/blog_category.dart';
 
 //* <----------- Search Blog Page -------------->
 
@@ -47,7 +47,7 @@ class _LatestPageState extends State<LatestPage> {
       },
     );
     Map data = json.decode(result.body);
-    final list = IgBlog.fromJson(data).data.data.toList();
+    final list = FilteredBlog.fromJson(data).data.toList();
 
     setState(() {
       blogListHolder.clearList();
@@ -167,7 +167,7 @@ class _LatestPageState extends State<LatestPage> {
                               padding: const EdgeInsets.only(top: 20.0),
                               child: Column(
                                 children: blogList
-                                    .map((e) => BottomCard(
+                                    .map((e) => SearchCard(
                                           e,
                                           blogList.indexOf(e),
                                           blogList,

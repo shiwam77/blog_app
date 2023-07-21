@@ -10,7 +10,7 @@ import 'package:incite/repository/user_repository.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
 import '../app_theme.dart';
-import '../models/blog_model.dart';
+import '../models/blog_category.dart';
 
 //* <----------- Search Blog Page -------------->
 
@@ -33,26 +33,29 @@ class _SavedPageState extends State<SavedPage> {
   }
 
   Future getLatestBlog() async {
-    _isLoading = true;
-    final msg = jsonEncode({"user_id": currentUser.value.id});
-    final String url = 'https://incite.technofox.co.in/api/AllBookmarkPost';
-    final client = new http.Client();
-    final response = await client.post(
-      Uri.parse(url),
-      headers: {
-        "Content-Type": "application/json",
-        'userData': currentUser.value.id,
-        "lang-code": languageCode.value?.language ?? null
-      },
-      body: msg,
-    );
-    Map data = json.decode(response.body);
-    final list = IgBlog.fromJson(data).data.data.toList();
-
-    setState(() {
-      blogList = list;
+    try {
+      _isLoading = true;
+      final msg = jsonEncode({"user_id": currentUser.value.id});
+      final String url = 'https://incite.technofox.co.in/api/AllBookmarkPost';
+      final client = new http.Client();
+      final response = await client.post(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+          'userData': currentUser.value.id,
+          "lang-code": languageCode.value?.language ?? null
+        },
+        body: msg,
+      );
+      Map data = json.decode(response.body);
+      final list = FilteredBlog.fromJson(data).data.toList();
+      setState(() {
+        blogList = list;
+      });
+    } catch (e) {
+    } finally {
       _isLoading = false;
-    });
+    }
   }
 
   @override

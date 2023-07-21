@@ -13,7 +13,7 @@ import 'package:incite/pages/saved_post.dart';
 import 'package:incite/pages/search_page.dart';
 import 'package:incite/pages/user_profile.dart';
 
-import 'models/blog_model.dart';
+import 'models/blog_category.dart';
 import 'pages/language_selection.dart';
 import 'pages/splash_screen.dart';
 

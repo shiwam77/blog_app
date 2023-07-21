@@ -13,7 +13,7 @@ import 'package:incite/repository/user_repository.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
 import '../app_theme.dart';
-import '../models/blog_model.dart';
+import '../models/blog_category.dart';
 
 //* <----------- Search Blog Page -------------->
 
@@ -37,40 +37,45 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void getSearchedBlog() async {
-    _isLoading = true;
-    if (searchController != null) {
-      final msg = jsonEncode(
-          {"title": searchController.text, "user_id": currentUser.value.id});
-      final String url = 'https://incite.technofox.co.in/api/searchBlog';
-      final client = new http.Client();
-      final response = await client.post(
-        Uri.parse(url),
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json',
-          "lang-code": languageCode.value?.language ?? null
-        },
-        body: msg,
-      );
-      Map data = json.decode(response.body);
-      final list = IgBlog.fromJson(data).data.data.toList();
+    try {
+      _isLoading = true;
+      if (searchController != null) {
+        final msg = jsonEncode(
+            {"title": searchController.text, "user_id": currentUser.value.id});
+        final String url = 'https://incite.technofox.co.in/api/searchBlog';
+        final client = new http.Client();
+        final response = await client.post(
+          Uri.parse(url),
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            "lang-code": languageCode.value?.language ?? null
+          },
+          body: msg,
+        );
+        Map data = json.decode(response.body);
+        final list = FilteredBlog.fromJson(data).data.toList();
 
-      setState(() {
-        blogList = list;
-        _isLoading = false;
-      });
-      if (data['status'] == true) {
-        _isFound = true;
+        setState(() {
+          blogList = list;
+        });
+        if (data['status'] == true) {
+          _isFound = true;
+        } else {
+          _isFound = false;
+        }
       } else {
-        _isFound = false;
+        Fluttertoast.showToast(
+            msg: allMessages.value.noResultFound,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 5,
+            backgroundColor: Colors.red,
+            textColor: Colors.white);
       }
-    } else {
-      Fluttertoast.showToast(
-          msg: allMessages.value.noResultFound,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.TOP,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.red,
-          textColor: Colors.white);
+    } catch (e) {
+      print(e);
+    } finally {
+      _isLoading = false;
     }
   }
 
@@ -250,7 +255,7 @@ class _SearchPageState extends State<SearchPage> {
                                 child: Column(
                                   children: blogList
                                       .map(
-                                        (e) => BottomCard(
+                                        (e) => SearchCard(
                                           e,
                                           blogList.indexOf(e),
                                           blogList,

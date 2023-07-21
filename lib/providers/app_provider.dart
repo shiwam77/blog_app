@@ -8,12 +8,14 @@ import 'package:incite/data/blog_list_holder.dart';
 // import 'package:incite/models/blog_category.dart';
 import 'package:incite/repository/user_repository.dart';
 
+import '../models/blog_category.dart';
 import '../models/blog_model.dart';
 
 class AppProvider with ChangeNotifier {
   bool _load = false;
   IgBlog _blog;
   var _blogList;
+  IgBlogCategory blogCategory;
 
   AppProvider() {
     //_getCurrentUser();
@@ -49,8 +51,8 @@ class AppProvider with ChangeNotifier {
           "lang-code": languageCode.value?.language ?? null
         },
       );
-      final data = json.decode(result.body);
-      _blog = IgBlog.fromJson(data);
+      Map data = json.decode(result.body);
+      blogCategory = IgBlogCategory.fromJson(data);
       setLoading(load: false);
     } catch (e) {
       setLoading(load: false);

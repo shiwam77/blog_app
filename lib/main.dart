@@ -1,6 +1,7 @@
 // @dart=2.9
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,13 +15,16 @@ import 'package:incite/route_generator.dart';
 import 'package:provider/provider.dart';
 
 import 'helpers/shared_pref_utils.dart';
-import 'models/blog_model.dart';
+import 'models/blog_category.dart';
 import 'models/language.dart';
 import 'models/setting.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+// Ideal time to initialize
+  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   try {
     GetIt.instance.registerSingleton<SharedPreferencesUtils>(
         await SharedPreferencesUtils.getInstance());
@@ -60,19 +64,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<AppProvider>(context, listen: false)
-        ..getBlogData()
-        ..getCategory();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
     return ValueListenableBuilder(
         valueListenable: languageCode,
         builder: (context, Language langue, child) {
@@ -84,7 +83,7 @@ class _MyAppState extends State<MyApp> {
               print("appThemeModel $appThemeModel");
               return MaterialApp(
                 initialRoute:
-                    '/SplashScreen', //_userLog ? '/LoadSwipePage' : '/AuthPage',
+                    '/MainPage', //_userLog ? '/LoadSwipePage' : '/AuthPage',
                 onGenerateRoute: RouteGenerator.generateRoute,
                 builder: BotToastInit(), //1. call BotToastInit
                 navigatorObservers: [BotToastNavigatorObserver()],

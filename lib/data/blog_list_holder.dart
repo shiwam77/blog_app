@@ -2,7 +2,7 @@
 
 // import 'package:incite/models/blog_category.dart';
 
-import '../models/blog_model.dart';
+import '../models/blog_category.dart';
 
 class BlogListHolder {
   List<Blog> _list = [];

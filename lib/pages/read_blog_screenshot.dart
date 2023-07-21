@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' show parse;
 
-import '../models/blog_model.dart';
+import '../models/blog_category.dart';
 
 class ReadBlogScreenshot extends StatefulWidget {
   final Blog item;

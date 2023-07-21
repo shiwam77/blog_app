@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:bot_toast/bot_toast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -35,11 +36,8 @@ class UserController extends ControllerMVC {
   FirebaseMessaging _firebaseMessaging;
 
   bool _isLoading = false;
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-    ],
-  );
+
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   UserController() {
     loginFormKey = new GlobalKey<FormState>();
@@ -59,40 +57,41 @@ class UserController extends ControllerMVC {
     });
   }
 
-  void googleLogin(GlobalKey<ScaffoldState> scKey) async {
-    BotToast.showLoading();
-    try {
-      GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-      print("googleSignInAccount $googleSignInAccount");
-      repository.googleLogin(googleSignInAccount).then((value) async {
-        print("value $value");
-        if (value != null && value.apiToken != null) {
-          await getLanguageFromServer();
-          Navigator.of(scKey.currentContext).pushReplacement(MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ));
-          Navigator.of(scKey.currentContext).push(MaterialPageRoute(
-            builder: (context) => SwipeablePage(0),
-          ));
-        } else {
-          ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
-            content: Text(repository.allMessages.value.wrongEmailAndPassword),
-          ));
-        }
-      }).catchError((e) {
-        print(e);
-
-        ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
-          content: Text(repository.allMessages.value.emailNotExist),
-        ));
-      }).whenComplete(() {
-        BotToast.closeAllLoading();
-      });
-    } catch (e) {
-      print(e);
-      BotToast.showCustomText(toastBuilder: (_) => Text(e.toString()));
-    }
-  }
+  // void googleLogin(GlobalKey<ScaffoldState> scKey) async {
+  //   BotToast.showLoading();
+  //   try {
+  //     GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+  //     print("googleSignInAccount $googleSignInAccount");
+  //     repository.googleLogin(googleSignInAccount).then((value) async {
+  //       print("value $value");
+  //       if (value != null && value.apiToken != null) {
+  //         await getLanguageFromServer();
+  //         Navigator.of(scKey.currentContext).pushReplacement(MaterialPageRoute(
+  //           builder: (context) => HomePage(),
+  //         ));
+  //         Navigator.of(scKey.currentContext).push(MaterialPageRoute(
+  //           builder: (context) => SwipeablePage(0),
+  //         ));
+  //       } else {
+  //         ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
+  //           content: Text(repository.allMessages.value.wrongEmailAndPassword),
+  //         ));
+  //       }
+  //     }).catchError((e) {
+  //       print(e);
+  //
+  //       ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
+  //         content: Text(repository.allMessages.value.emailNotExist),
+  //       ));
+  //     }).whenComplete(() {
+  //       BotToast.closeAllLoading();
+  //     });
+  //   } catch (e) {
+  //     BotToast.closeAllLoading();
+  //     print(e);
+  //     BotToast.showCustomText(toastBuilder: (_) => Text(e.toString()));
+  //   }
+  // }
 
   void login(GlobalKey<ScaffoldState> scKey) async {
     print(user);
@@ -106,10 +105,9 @@ class UserController extends ControllerMVC {
             // await getLanguageFromServer();
             print("in if");
             // Get.offAll(HomePage());
-            Navigator.of(scKey.currentContext)
-                .pushReplacement(MaterialPageRoute(
-              builder: (context) => HomePage(),
-            ));
+            Navigator.of(scKey.currentContext).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => HomePage()),
+                (Route<dynamic> route) => false);
             Navigator.of(scKey.currentContext).push(MaterialPageRoute(
               builder: (context) => SwipeablePage(0),
             ));
@@ -138,6 +136,7 @@ class UserController extends ControllerMVC {
           ));
         }
       }).catchError((e) {
+        BotToast.closeAllLoading();
         ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
           content: Text(repository.allMessages.value.emailNotExist),
         ));
@@ -166,6 +165,7 @@ class UserController extends ControllerMVC {
           ));
         }
       }).catchError((e) {
+        BotToast.closeAllLoading();
         ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
           content: Text(repository.allMessages.value.emailNotExist),
         ));
@@ -402,4 +402,84 @@ class UserController extends ControllerMVC {
   }
 
   Future<dynamic> onSelectNotification(String payload) async {}
+
+  Future<void> googleLogin(GlobalKey<ScaffoldState> scKey) async {
+    try {
+      BotToast.showLoading();
+      final GoogleSignIn _googleSignIn = GoogleSignIn();
+      GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+      GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      repository
+          .googleLogin(
+              googleSignInAccount, googleSignInAuthentication.accessToken)
+          .then((value) async {
+        print("value $value");
+        if (value != null && value.apiToken != null) {
+          await getLanguageFromServer();
+          Navigator.of(scKey.currentContext).pushReplacement(MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ));
+          Navigator.of(scKey.currentContext).push(MaterialPageRoute(
+            builder: (context) => SwipeablePage(0),
+          ));
+        } else {
+          ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
+            content: Text(repository.allMessages.value.wrongEmailAndPassword),
+          ));
+        }
+        BotToast.closeAllLoading();
+      }).catchError((e) {
+        BotToast.closeAllLoading();
+        BotToast.showCustomText(toastBuilder: (_) => Text(e.toString()));
+        throw e;
+      });
+    } catch (e) {
+      BotToast.closeAllLoading();
+    }
+  }
+
+  // Future<void> googleLogin(GlobalKey<ScaffoldState> scKey) async {
+  //   try {
+  //     BotToast.showLoading();
+  //     // GoogleSignIn _googleSignIn = GoogleSignIn(
+  //     //   scopes: [
+  //     //     'email',
+  //     //   ],
+  //     // );
+  //     // final GoogleSignInAccount googleSignInAccount =
+  //     //     await _googleSignIn.signIn();
+  //     // final GoogleSignInAuthentication googleAuthentication =
+  //     //     await googleSignInAccount.authentication;
+  //     // final AuthCredential credential = GoogleAuthProvider.credential(
+  //     //     accessToken: googleAuthentication.accessToken,
+  //     //     idToken: googleAuthentication.idToken);
+  //     // final UserCredential authResult =
+  //     //     await firebaseAuth.signInWithCredential(credential);
+  //     User user = await firebaseAuth.s(context: context);
+  //     repository.googleLogin(authResult).then((value) async {
+  //       print("value $value");
+  //       if (value != null && value.apiToken != null) {
+  //         await getLanguageFromServer();
+  //         Navigator.of(scKey.currentContext).pushReplacement(MaterialPageRoute(
+  //           builder: (context) => HomePage(),
+  //         ));
+  //         Navigator.of(scKey.currentContext).push(MaterialPageRoute(
+  //           builder: (context) => SwipeablePage(0),
+  //         ));
+  //       } else {
+  //         ScaffoldMessenger.of(scKey.currentContext).showSnackBar(SnackBar(
+  //           content: Text(repository.allMessages.value.wrongEmailAndPassword),
+  //         ));
+  //       }
+  //     }).catchError((e) {
+  //       throw e;
+  //     });
+  //   } catch (e) {
+  //     BotToast.showCustomText(toastBuilder: (_) => Text(e.toString()));
+  //   } finally {
+  //     BotToast.closeAllLoading();
+  //   }
+  // }
 }
