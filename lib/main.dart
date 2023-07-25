@@ -7,8 +7,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:global_configuration/global_configuration.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:incite/app_theme.dart';
 import 'package:incite/models/app_model.dart';
 import 'package:incite/providers/app_provider.dart';
@@ -25,8 +27,10 @@ import 'models/messages.dart';
 import 'models/setting.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
+  MobileAds.instance.initialize();
 
 // Ideal time to initialize
   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
@@ -57,6 +61,7 @@ void main() async {
       child: MyApp(),
     ),
   );
+  FlutterNativeSplash.remove();
 }
 
 Future<void> initLanguage() async {

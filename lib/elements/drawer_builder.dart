@@ -857,7 +857,7 @@ class _DrawerBuilderState extends State<DrawerBuilder> {
                     radius: 50,
                     backgroundImage: currentUser.value.photo != null
                         ? NetworkImage(currentUser.value.photo)
-                        : AssetImage('assets/img/user.png'),
+                        : AssetImage('assets/img/app_icon.png'),
                   ),
                 ),
                 onTap: () {
@@ -873,7 +873,7 @@ class _DrawerBuilderState extends State<DrawerBuilder> {
                     borderRadius: BorderRadius.circular(90),
                     image: DecorationImage(
                       image: AssetImage(
-                        'assets/img/user.png',
+                        'assets/img/app_icon.png',
                       ),
                       fit: BoxFit.cover,
                     )),

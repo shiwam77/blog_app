@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -77,25 +76,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
-  static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-    testDevices: testDevice != null ? <String>[testDevice] : null,
-    keywords: <String>['foo', 'bar'],
-    contentUrl: 'http://foo.com/bar.html',
-    childDirected: true,
-    nonPersonalizedAds: true,
-  );
-
-  BannerAd _bannerAd;
-
-  BannerAd createBannerAd() {
-    return BannerAd(
-      adUnitId: BannerAd.testAdUnitId,
-      size: AdSize.banner,
-      targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {},
-    );
-  }
-
   GlobalKey<ScaffoldState> scaffoldKey;
 
   HomeController homeController;
@@ -107,7 +87,6 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
   var height, width;
   bool showTopTabBar = false;
   String localLanguage;
-
   bool _userLog = false;
   UserController userController = UserController();
 
@@ -145,7 +124,6 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -252,7 +230,7 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
           child: Row(
             children: [
               Image.asset(
-                "assets/img/incite.png",
+                "assets/img/namelogo.png",
                 width: 0.25 * width,
                 fit: BoxFit.cover,
               ),
@@ -303,10 +281,10 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                         ? currentUser.value.photo != null
                             ? NetworkImage(currentUser.value.photo)
                             : AssetImage(
-                                'assets/img/user.png',
+                                'assets/img/app_icon.png',
                               )
                         : AssetImage(
-                            'assets/img/user.png',
+                            'assets/img/app_icon.png',
                           ),
                   ),
                 ),

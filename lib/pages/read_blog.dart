@@ -11,6 +11,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -176,8 +177,6 @@ class _ReadBlogState extends State<ReadBlog> {
     _viewPost();
   }
 
-  bool isReadBlogAvailable = true;
-
   @override
   void dispose() {
     super.dispose();
@@ -198,105 +197,101 @@ class _ReadBlogState extends State<ReadBlog> {
             color: Colors.grey,
             child: Scaffold(
               backgroundColor: Theme.of(context).cardColor,
-              body: GestureDetector(
-                onHorizontalDragEnd: (DragEndDetails dragDetail) {
-                  isReadBlogAvailable = true;
-                },
-                onHorizontalDragUpdate: (DragUpdateDetails details) async {
-                  print("details.delta.xd ${details.delta.dx}");
-                  if (details.delta.dx < 0) {
-                    print("left isReadBlogAvailable $isReadBlogAvailable");
-
-                    if (widget.item.url != null && isReadBlogAvailable) {
-                      isReadBlogAvailable = false;
-                      // await Helper.launchURL(widget.item.url);
-                      print("getCurrentItem().url, ${getCurrentItem().url}");
-                      /* try {
-                        videoPlayeState.currentState.vidoPlayPauseTogal(true);
-                      } catch (e) {
-                        print("error while pause $e");
-                      }*/
-                      setState(() {
-                        linkOpen = true;
-                      });
-                      /*    await Get.to(CustomWebView(
-                        url: getCurrentItem().url,
-                      ));*/
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CustomWebView(
-                            url: getCurrentItem().url,
-                          ),
+              body: SwipeDetector(
+                // onSwipe: (direction, offset) {
+                //   _addSwipe(direction);
+                // },
+                onSwipeUp: (offset) {},
+                onSwipeDown: (offset) {},
+                onSwipeLeft: (offset) async {
+                  if (widget.item.url != null) {
+                    // await Helper.launchURL(widget.item.url);
+                    print("getCurrentItem().url, ${getCurrentItem().url}");
+                    /* try {
+                      videoPlayeState.currentState.vidoPlayPauseTogal(true);
+                    } catch (e) {
+                      print("error while pause $e");
+                    }*/
+                    setState(() {
+                      linkOpen = true;
+                    });
+                    /*    await Get.to(CustomWebView(
+                      url: getCurrentItem().url,
+                    ));*/
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CustomWebView(
+                          url: getCurrentItem().url,
                         ),
-                      );
+                      ),
+                    );
 
-                      setState(() {
-                        linkOpen = false;
-                      });
-                      print(
-                          " MediaQuery.of(context).padding.top ${MediaQuery.of(context).padding.top}");
-                      /*  try {
-                        videoPlayeState.currentState.vidoPlayPauseTogal(true);
-                      } catch (e) {}
-                      await showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (BuildContext ctn) {
-                          return SafeArea(
-                            child: Container(
-                              color: Colors.transparent,
-                              margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).padding.top,
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: new BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: new BorderRadius.only(
-                                        topLeft: const Radius.circular(30.0),
-                                        topRight: const Radius.circular(30.0),
-                                      ),
-                                    ),
-                                    child: Stack(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 15, top: 5),
-                                            child: Icon(
-                                              Icons.close,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                    setState(() {
+                      linkOpen = false;
+                    });
+                    print(
+                        " MediaQuery.of(context).padding.top ${MediaQuery.of(context).padding.top}");
+                    /*  try {
+                      videoPlayeState.currentState.vidoPlayPauseTogal(true);
+                    } catch (e) {}
+                    await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (BuildContext ctn) {
+                        return SafeArea(
+                          child: Container(
+                            color: Colors.transparent,
+                            margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).padding.top,
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: new BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: new BorderRadius.only(
+                                      topLeft: const Radius.circular(30.0),
+                                      topRight: const Radius.circular(30.0),
                                     ),
                                   ),
-                                  Expanded(
-                                    child: WebView(
-                                      initialUrl: widget.item.url,
-                                    ),
-                                  )
-                                ],
-                              ),
+                                  child: Stack(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 15, top: 5),
+                                          child: Icon(
+                                            Icons.close,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: WebView(
+                                    initialUrl: widget.item.url,
+                                  ),
+                                )
+                              ],
                             ),
-                          );
-                        },
-                      );
-                      try {
-                        videoPlayeState.currentState.vidoPlayPauseTogal(false);
-                      } catch (e) {}
+                          ),
+                        );
+                      },
+                    );
+                    try {
+                      videoPlayeState.currentState.vidoPlayPauseTogal(false);
+                    } catch (e) {}
 */
-                      // await launch(widget.item.url).then((value) {});
-                    }
-                  } else if (details.delta.dx > 0) {
-                    print("right");
-                    Navigator.pop(context);
+                    // await launch(widget.item.url).then((value) {});
                   }
+                },
+                onSwipeRight: (offset) {
+                  Navigator.pop(context);
                 },
                 child: Stack(
                   children: <Widget>[
