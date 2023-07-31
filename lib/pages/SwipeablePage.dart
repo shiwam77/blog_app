@@ -224,7 +224,7 @@ class _SwipeablePageState extends State<SwipeablePage> {
     super.dispose();
     pageController.removeListener(listener);
     pageController.dispose();
-    _rewardedInterstitialAd.dispose();
+    _rewardedInterstitialAd?.dispose();
   }
 }
 
