@@ -38,7 +38,7 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future getCategory() async {
+  getCategory() async {
     print('getCategory is called');
     try {
       setLoading(load: true);
@@ -59,7 +59,7 @@ class AppProvider with ChangeNotifier {
     }
   }
 
-  Future getBlogData() async {
+  getBlogData() async {
     // try {
     print('getBlogData is called');
     var url = "https://incite.technofox.co.in/api/blog-list";

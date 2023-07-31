@@ -25,7 +25,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController;
   FocusNode focusNod = FocusNode();
-  List<Blog> blogList = List();
+  List<Blog> blogList = [];
   bool _isLoading = false;
   bool _isFound = true;
   var width;

@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.15.0 <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -189,9 +189,9 @@ flutter_native_splash:
   # parameters from above. If the image_dark parameter is specified, color_dark or
   # background_image_dark must be specified.  color_dark and background_image_dark cannot both be
   # set.
-  #color_dark: "#042a49"
+  color_dark: "#FFFFFF"
   #background_image_dark: "assets/dark-background.png"
-  #image_dark: assets/splash-invert.png
+  image_dark: assets/img/app_icon.png
   #branding_dark: assets/dart_dark.png
 
   # Android 12 handles the splash screen differently than previous versions.  Please visit

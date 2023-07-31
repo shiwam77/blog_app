@@ -23,7 +23,7 @@ class LatestPage extends StatefulWidget {
 
 class _LatestPageState extends State<LatestPage> {
   TextEditingController searchController;
-  List<Blog> blogList = List();
+  List<Blog> blogList = [];
   bool _isLoading = false;
   bool _isFound = true;
   var height, width;

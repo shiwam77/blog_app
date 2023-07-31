@@ -64,7 +64,7 @@ void main() async {
   FlutterNativeSplash.remove();
 }
 
-Future<void> initLanguage() async {
+initLanguage() async {
   UserController userController = UserController();
   await userController.getAllAvialbleLanguages();
   if (prefs != null && prefs.containsKey("defalut_language")) {

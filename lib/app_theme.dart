@@ -63,7 +63,7 @@ ThemeData getLightThemeData() {
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       }),
       primaryColor: appMainColor,
-      accentColor: appMainColor,
+      hintColor: appMainColor,
       brightness: Brightness.light,
       primaryIconTheme: IconThemeData(color: Colors.black),
       textTheme: getLightTextTheme());
@@ -76,7 +76,7 @@ ThemeData getDarkThemeData() {
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       }),
       primaryColor: appMainColor,
-      accentColor: appMainColor,
+      hintColor: appMainColor,
       brightness: Brightness.dark,
       primaryIconTheme: IconThemeData(color: Colors.white),
       textTheme: getDarkTextTheme());

@@ -21,7 +21,7 @@ class SavedPage extends StatefulWidget {
 
 class _SavedPageState extends State<SavedPage> {
   TextEditingController searchController;
-  List<Blog> blogList = List();
+  List<Blog> blogList = [];
   bool _isLoading = false;
   var width;
   @override

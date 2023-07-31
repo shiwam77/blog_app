@@ -274,6 +274,9 @@ class _AuthPageState extends State<AuthPage> {
                       fit: BoxFit.cover,
                       cacheKey: appImage,
                       useOldImageOnUrlChange: false,
+                      errorWidget: (context, image, _) {
+                        return Container();
+                      },
                     )
                   : Container(),
             ),
