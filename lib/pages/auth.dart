@@ -275,7 +275,13 @@ class _AuthPageState extends State<AuthPage> {
                       cacheKey: appImage,
                       useOldImageOnUrlChange: false,
                       errorWidget: (context, image, _) {
-                        return Container();
+                        return Center(
+                          child: Image.asset(
+                            "assets/img/app_icon.png",
+                            width: 150,
+                            height: 150,
+                          ),
+                        );
                       },
                     )
                   : Container(),
