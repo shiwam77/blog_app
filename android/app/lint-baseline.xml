@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.2.0" type="baseline" client="gradle" dependencies="false" name="AGP (7.2.0)" variant="fatal" version="7.2.0">
+
+    <issue
+        id="MissingDefaultResource"
+        message="The drawable &quot;launch_image&quot; in drawable-night has no declaration in the base `drawable` folder or in a `drawable-`*density*`dpi` folder; this can lead to crashes when the drawable is queried in a configuration that does not match this qualifier">
+        <location
+            file="src/main/res/drawable-night/launch_image.png"/>
+    </issue>
+
+    <issue
+        id="NetworkSecurityConfig"
+        message="Missing `includeSubdomains` attribute"
+        errorLine1="        &lt;domain>10.0.2.2&lt;/domain>"
+        errorLine2="         ~~~~~~">
+        <location
+            file="src/main/res/xml/network_security_config.xml"
+            line="4"
+            column="10"/>
+    </issue>
+
+</issues>
