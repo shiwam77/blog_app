@@ -7,14 +7,22 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:58361473090:android:75b761d3eaa6630a7865db",
+        "mobilesdk_app_id": "1:58361473090:android:db224b25afad5a627865db",
         "android_client_info": {
-          "package_name": "com.app.incite"
+          "package_name": "com.app.chotokhabar"
         }
       },
       "oauth_client": [
         {
-          "client_id": "58361473090-appvbil59aj6dstnt1rko9af9huvgfl7.apps.googleusercontent.com",
+          "client_id": "58361473090-e91242jcil8p7evipm9igedsnnthkj1n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.chotokhabar",
+            "certificate_hash": "e867ede338ec79c401c7c3929297cd958babd384"
+          }
+        },
+        {
+          "client_id": "58361473090-0pgfi21bdenecvthlbtreispc2s2sf7e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "58361473090-appvbil59aj6dstnt1rko9af9huvgfl7.apps.googleusercontent.com",
+              "client_id": "58361473090-0pgfi21bdenecvthlbtreispc2s2sf7e.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -36,22 +44,22 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:58361473090:android:7fdf4ca49367ec957865db",
+        "mobilesdk_app_id": "1:58361473090:android:0c1ebbd2bb5143247865db",
         "android_client_info": {
-          "package_name": "com.app.incite.dev"
+          "package_name": "com.app.chotokhabar.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "58361473090-kms0ejk8lgtpc9m0efb8df3pok5nc9n5.apps.googleusercontent.com",
+          "client_id": "58361473090-nvo7evqa46tt2b2tqob2maipgidlv56n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.app.incite.dev",
+            "package_name": "com.app.chotokhabar.dev",
             "certificate_hash": "63ba7e3ab531697691f65b7a60d1730a91e9e487"
           }
         },
         {
-          "client_id": "58361473090-appvbil59aj6dstnt1rko9af9huvgfl7.apps.googleusercontent.com",
+          "client_id": "58361473090-0pgfi21bdenecvthlbtreispc2s2sf7e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -64,7 +72,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "58361473090-appvbil59aj6dstnt1rko9af9huvgfl7.apps.googleusercontent.com",
+              "client_id": "58361473090-0pgfi21bdenecvthlbtreispc2s2sf7e.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

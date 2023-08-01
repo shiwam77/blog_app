@@ -17,7 +17,7 @@
     <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@android:color/white</item>
     </style>
-    <string name="app_name">LoveOman</string>
+    <string name="app_name">ChotoKhabar</string>
     <string name="facebook_app_id">171127881015916</string>
     <string name="fb_login_protocol_scheme">fb171127881015916</string>
     <string name="facebook_client_token">YOUR_CLIENT_ACCESS_TOKEN</string>
