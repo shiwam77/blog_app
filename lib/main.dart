@@ -3,7 +3,6 @@
 import 'dart:convert';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,10 +29,8 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
-  MobileAds.instance.initialize();
+  await MobileAds.instance.initialize();
 
-// Ideal time to initialize
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   try {
     GetIt.instance.registerSingleton<SharedPreferencesUtils>(
         await SharedPreferencesUtils.getInstance());
@@ -68,13 +65,9 @@ initLanguage() async {
   UserController userController = UserController();
   await userController.getAllAvialbleLanguages();
   if (prefs != null && prefs.containsKey("defalut_language")) {
-    print("defalut_language ${prefs.containsKey("defalut_language")}");
     String lng = prefs.getString("defalut_language");
     String localData = prefs.getString("local_data");
-    print("lng $lng");
-    print("allMessages $localData");
     allMessages.value = Messages.fromJson(json.decode(localData));
-    print(allMessages.value);
     languageCode.value = Language.fromJson(json.decode(lng));
   } else {
     print("else ${currentUser.value.name}");
@@ -122,18 +115,15 @@ class _MyAppState extends State<MyApp> {
     return ValueListenableBuilder(
         valueListenable: languageCode,
         builder: (context, Language langue, child) {
-          print("languageCode ${langue?.name ?? ""}");
-
           return ValueListenableBuilder(
             valueListenable: appThemeModel,
             builder: (context, AppModel value, child) {
-              print("appThemeModel $appThemeModel");
               return MaterialApp(
                 initialRoute: _userLog == true
                     ? '/MainPage'
                     : !prefs.containsKey("defalut_language")
                         ? "/LanguageSelection"
-                        : "/AuthPage", //_userLog ? '/LoadSwipePage' : '/AuthPage',
+                        : "/AuthPage",
                 onGenerateInitialRoutes: (String initialRouteName) {
                   if (initialRouteName == "/LanguageSelection") {
                     return [

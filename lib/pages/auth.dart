@@ -4,11 +4,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:incite/controllers/user_controller.dart';
 import 'package:incite/data/blog_list_holder.dart';
@@ -316,11 +318,10 @@ class _AuthPageState extends State<AuthPage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6.0)),
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => HomePage(),
-                      ));
-                      Navigator.of(context)
-                          .pushReplacementNamed('/MainPage', arguments: false);
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => HomePageLoadingScreen()),
+                          (Route<dynamic> route) => false);
                     },
                     color: Colors.black,
                     child: Text(
@@ -450,6 +451,7 @@ class _AuthPageState extends State<AuthPage> {
                 ),
                 onTap: () {
                   userController.googleLogin(scaffoldKey);
+                  // Authentication.signInWithGoogle(context: context);
                 },
               ),
             ),
@@ -457,5 +459,43 @@ class _AuthPageState extends State<AuthPage> {
         ],
       );
     });
+  }
+}
+
+class Authentication {
+  static Future<User> signInWithGoogle({@required BuildContext context}) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User user;
+
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      try {
+        final UserCredential userCredential =
+            await auth.signInWithCredential(credential);
+
+        user = userCredential.user;
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'account-exists-with-different-credential') {
+          // handle the error here
+        } else if (e.code == 'invalid-credential') {
+          // handle the error here
+        }
+      } catch (e) {
+        // handle the error here
+      }
+    }
+
+    return user;
   }
 }

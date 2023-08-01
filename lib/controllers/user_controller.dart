@@ -106,7 +106,8 @@ class UserController extends ControllerMVC {
             print("in if");
             // Get.offAll(HomePage());
             Navigator.of(scKey.currentContext).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(
+                    builder: (context) => HomePageLoadingScreen()),
                 (Route<dynamic> route) => false);
             Navigator.of(scKey.currentContext).push(MaterialPageRoute(
               builder: (context) => SwipeablePage(0),
@@ -125,6 +126,9 @@ class UserController extends ControllerMVC {
     } else {
       repository.login(user).then((value) {
         if (value != null && value.apiToken != null) {
+          Navigator.of(scKey.currentContext).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => HomePageLoadingScreen()),
+              (Route<dynamic> route) => false);
           Navigator.of(scKey.currentContext).push(MaterialPageRoute(
             builder: (context) => SwipeablePage(0),
           ));
@@ -153,9 +157,9 @@ class UserController extends ControllerMVC {
       BotToast.showLoading();
       repository.register(user).then((value) {
         if (value != null && value.apiToken != null) {
-          Navigator.of(scKey.currentContext).pushReplacement(MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ));
+          Navigator.of(scKey.currentContext).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => HomePageLoadingScreen()),
+              (Route<dynamic> route) => false);
           Navigator.of(scKey.currentContext).push(MaterialPageRoute(
             builder: (context) => SwipeablePage(0),
           ));
@@ -412,16 +416,22 @@ class UserController extends ControllerMVC {
       GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
       GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User user;
+      final UserCredential userCredential =
+          await auth.signInWithCredential(credential);
 
-      repository
-          .googleLogin(
-              googleSignInAccount, googleSignInAuthentication.accessToken)
-          .then((value) async {
+      user = userCredential.user;
+      repository.googleLogin(user).then((value) async {
         print("value $value");
         if (value != null && value.apiToken != null) {
           await getLanguageFromServer();
           Navigator.of(scKey.currentContext).pushReplacement(MaterialPageRoute(
-            builder: (context) => HomePage(),
+            builder: (context) => HomePageLoadingScreen(),
           ));
           Navigator.of(scKey.currentContext).push(MaterialPageRoute(
             builder: (context) => SwipeablePage(0),

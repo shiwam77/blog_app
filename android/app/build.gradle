@@ -80,13 +80,15 @@ android {
             signingConfig signingConfigs.debug
             manifestPlaceholders = [usesCleartextTraffic:"true"]
             applicationIdSuffix ".dev"
+            versionNameSuffix '-DEBUG'
+            manifestPlaceholders = [appLabel: "छोटो खबर देव"]
         }
 
         release {
             shrinkResources false
             minifyEnabled false
             manifestPlaceholders = [usesCleartextTraffic:"false"]
-
+            manifestPlaceholders = [appLabel: "छोटो खबर"]
             signingConfig signingConfigs.release
         }
     }

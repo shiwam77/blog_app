@@ -5,7 +5,6 @@ import 'package:incite/pages/ads.dart';
 import 'package:incite/pages/auth.dart';
 import 'package:incite/pages/category_post.dart';
 import 'package:incite/pages/home_page.dart';
-import 'package:incite/pages/home_page_clone_1.dart';
 import 'package:incite/pages/latest_post.dart';
 import 'package:incite/pages/load_swipeable.dart';
 import 'package:incite/pages/read_blog.dart';
@@ -34,8 +33,6 @@ class RouteGenerator {
         );
       case '/MainPage':
         return MaterialPageRoute(builder: (context) => HomePageLoadingScreen());
-      case '/HomeClonePage':
-        return MaterialPageRoute(builder: (context) => HomeClonePage());
       case '/ReadBlog':
         final args = settings.arguments as Blog;
 

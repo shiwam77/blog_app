@@ -3,11 +3,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:incite/models/language.dart';
 import 'package:incite/models/messages.dart';
@@ -108,14 +108,14 @@ Future<Users> login(Users user) async {
   }
 }
 
-Future<Users> googleLogin(GoogleSignInAccount user, String accessToken) async {
+Future<Users> googleLogin(User user) async {
   final _firebaseMessaging = FirebaseMessaging.instance;
   String token = await _firebaseMessaging.getToken();
   final msg = jsonEncode({
     "email": user.email,
     "name": user.displayName,
-    "image": user.photoUrl,
-    "google_token": accessToken,
+    "image": user.photoURL,
+    "google_token": user.refreshToken,
     "device_token": token,
     "login_from": "google"
   });
@@ -147,6 +147,7 @@ Future<Users> googleLogin(GoogleSignInAccount user, String accessToken) async {
     return currentUser.value;
   } else {
     showToast(json.decode(response.body)['message']);
+    throw FlutterError("Issue from backend");
   }
 }
 

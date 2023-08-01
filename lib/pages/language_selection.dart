@@ -96,22 +96,11 @@ class _LanguageSelectionState extends State<LanguageSelection> {
                             json.encode(allMessages.value.toJson()));
                         userController.getLanguageFromServer().then((value) {
                           if (!widget.isInHomePage) {
-                            provider
-                              ..getBlogData().then((value) async {
-                                provider
-                                  ..getCategory().then((value) {
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        '/AuthPage',
-                                        (Route route) => route.isFirst);
-                                  }).catchError((e) {
-                                    throw e;
-                                  });
-                              }).catchError((e) {
-                                setState(() {
-                                  loading = false;
-                                });
-                              });
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                '/AuthPage', (Route route) => route.isFirst);
+                            setState(() {
+                              loading = false;
+                            });
                           } else {
                             if (currentUser.value.name != null) {
                               userController.updateLanguage();

@@ -1,10 +1,8 @@
 //@dart=2.9
 
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -30,12 +28,6 @@ import 'e_news.dart';
 import 'live_news.dart';
 
 const String testDevice = 'YOUR_DEVICE_ID';
-//* <--------- Main Screen of the app ------------->
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(HomePage());
-}
 
 class HomePageLoadingScreen extends StatefulWidget {
   const HomePageLoadingScreen({Key key}) : super(key: key);
@@ -565,8 +557,7 @@ class _HomePageState extends StateMVC<HomePage> with TickerProviderStateMixin {
                         ),
                       );
                     })
-                  : List.generate(snapshot.blogCategory.data.length + 2,
-                      (index) {
+                  : List.generate(snapshot.blogCategory.data.length, (index) {
                       if (index == snapshot.blogCategory.data.length) {
                         return newCategories(
                             title: allMessages?.value?.eNews ?? "",
